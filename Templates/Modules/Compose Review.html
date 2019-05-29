@@ -1,0 +1,43 @@
+<aside class="ui raised segment">
+	<form class="ui form">
+		<h3>Write a review, scrub</h3>
+		
+		<button type="submit" class="ui labeled negative icon button">
+		<i class="right exclamation icon"></i>
+		Report publication
+		</button>
+		
+		<h4 class="ui dividing header">How would you rate these results?</h4>
+		<div class="three fields">
+			<div class="field">
+				<label>High Quality & Annotated</label>
+				<input type="range" min="1" max="5" style="width: 100%">
+			</div>
+			
+			<div class="field">
+				<label>Size of dataset</label>
+				<input type="range" min="1" max="5" style="width: 100%">
+			</div>
+			
+			<div class="field">
+				<label>Correct protocol</label>
+				<input type="range" min="1" max="5" style="width: 100%">
+			</div>
+		</div>
+		
+		<h4 class="ui dividing header">Write a review of these results</h4>
+		<div class="field">
+			<textarea name="ReviewText">Please be nice...</textarea>
+		</div>
+		
+		<script>
+			CKEDITOR.replace('ReviewText');
+		</script>
+		
+		<div class="ui buttons">
+			<input type="submit" class="ui positive button" value="Submit review">
+			<div class="or"></div>
+			<input type="reset" class="ui button">
+		</div>
+	</form>
+</aside>

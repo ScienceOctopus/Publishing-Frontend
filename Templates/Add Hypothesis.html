@@ -1,0 +1,42 @@
+{% extends "Bases/Base.html" %}
+
+{% block PreludeContent %}
+<div class="ui container" style="margin-top: 1em">
+	<h3 class="ui block header">Problem: {{ Problem.ProblemDescription }}</h3>
+
+	<div class="ui divider"></div>
+</div>
+{% endblock %}
+
+{% block MainContent %}
+<div class="ui placeholder segment">
+	<div class="ui header">
+		<i class="pdf file outline icon"></i>
+		<div class="content">
+			Add a pootable doocument foomatted file.
+			<div class="sub header">It's for the science, dummy</div>
+		</div>
+	</div>
+	<form class="ui form" method="post" enctype="multipart/form-data" action="/hypotheses/add/{{ Problem.ProblemId }}">
+		<div class="field">
+			<label>Document title</label>
+			<input name="Title" type="text">
+		</div>
+		<div class="field">
+			<label>Document summary</label>
+			<input name="Summary" type="text">
+		</div>
+		<div class="field">
+			<label>Document object identifier</label>
+			<input name="DOI" type="text">
+		</div>
+		<div class="field">
+			<label>Document object identifier</label>
+			<input name="Document" type="file">
+		</div>
+		<div class="field">
+			<input class="ui submit button" name="Upload" type="submit" value="Add Document">
+		</div>
+	</form>
+</div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "Bases/Base.html" %}
+
+{% block MainContent %}
+	<div style="border-bottom:none" class="ui teal vertical center aligned segment">
+		<div class="ui text container">
+			<h1 class="ui header">
+				Welcome to Octopus.
+				<div class="sub header">Where would <em>you</em> like to go today?</div>
+			</h1>
+			<i class="arrow down icon"></i>
+		</div>
+	</div>
+	
+	{% for Problem in Problems %}
+		<div class="ui text container">
+			<div class="ui segment">
+				<a class="ui divided link items" href="/hypotheses/all/{{ Problem.ProblemId }}">
+					<article class="item">
+						<div class="content">
+							<div class="header">{{ Problem.ProblemDescription }}</div>
+							<div class="description">What does this mean?</div>
+							<div class="extra">
+								<div class="ui label">Highly relevant</div>
+							</div>
+						</div>
+					</article>
+				</a>
+			</div>
+		</div>
+	{% endfor %}
+{% endblock %}

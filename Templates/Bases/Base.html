@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Octopus</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+		<link type="text/css" href="/Semantic-UI-CSS/semantic.min.css" rel="stylesheet" />
+		
+		{% block AdditionalHeadItems %}
+		{% endblock %}
+	</head>
+
+	{# height auto since semantic ui sets height 100% which causes a scrollbar to appear #}
+	{# TODO investigate? #}
+	<body style="height: auto">
+		{% include "Modules/Header.html" %}
+		
+		{% block PreludeContent %}
+		{% endblock %}
+
+		<main class="ui main container">
+			{% block MainContent %}
+			{% endblock %}
+		</main>
+
+		{% include "Modules/Footer.html" %}
+	</body>
+</html>

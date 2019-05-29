@@ -1,0 +1,78 @@
+<div style="overflow-x: auto; overflow-y: hidden; margin-top: -1rem; background-color: #dcf8ec">
+	<nav class="ui six column grid" style="min-width: 80em; margin: 0">
+		
+		<div class="column">
+			<div class="ui raised segment">
+				<h4>
+					Hypotheses
+					<div class="floating ui teal label">{{ Hypotheses|length }}</div>
+				</h4>
+				
+				{% for InnerHypothesis in Hypotheses %}
+				<a href="/hypotheses/show/{{ InnerHypothesis.HypothesisId }}" style="margin-bottom: 0.5em">
+					{% if InnerHypothesis.HypothesisId == Hypothesis.HypothesisId %}
+					<div class="ui teal inverted segment" style="font-size: 0.75rem">
+						<h5 style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden; width: 100%">{{ InnerHypothesis.Title }}</h5>
+						<div class="meta">{{ InnerHypothesis.DateAdded }}</div>
+						<div class="description">{{ InnerHypothesis.Summary }}</div>
+					</div>
+					{% else %}
+					<div class="ui segment" style="font-size: 0.75rem">
+						<h5 style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden; width: 100%">{{ InnerHypothesis.Title }}</h5>
+						<div class="meta">{{ InnerHypothesis.DateAdded }}</div>
+						<div class="description">{{ InnerHypothesis.Summary }}</div>
+					</div>
+					{% endif %}
+				</a>
+				{% endfor %}
+				
+			</div>
+		</div>
+		
+		<div class="column">
+			<div class="ui segment">
+				<h4>
+					Methods
+					<div class="floating ui label">0</div>
+				</h4>
+			</div>
+		</div>
+		
+		<div class="column">
+			<div class="ui segment">
+				<h4>
+					Results
+					<div class="floating ui label">0</div>
+				</h4>
+			</div>
+		</div>
+		
+		<div class="column">
+			<div class="ui segment">
+				<h4>
+					Analyses
+					<div class="floating ui label">0</div>
+				</h4>
+			</div>
+		</div>
+		
+		<div class="column">
+			<div class="ui segment">
+				<h4>
+					Interpretations
+					<div class="floating ui label">0</div>
+				</h4>
+			</div>
+		</div>
+		
+		<div class="column">
+			<div class="ui segment">
+				<h4>
+					Applications
+					<div class="floating ui label">0</div>
+				</h4>
+			</div>
+		</div>
+		
+	</nav>
+</div>

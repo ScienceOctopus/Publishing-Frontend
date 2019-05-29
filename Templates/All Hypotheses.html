@@ -1,0 +1,36 @@
+{% extends "Bases/Base.html" %}
+
+{% block PreludeContent %}
+{% include "Modules/Flow.html" %}
+
+<div class="ui container" style="margin-top: 1em">
+	<h3 class="ui block header">Problem: {{ Problem.ProblemDescription }}</h3>
+</div>
+{% endblock %}
+
+{% block MainContent %}
+	<div style="margin-top: 4em"></div>
+	
+	{% for Hypothesis in Hypotheses %}
+		<a class="ui divided link items" href="/hypotheses/show/{{ Hypothesis.HypothesisId }}">
+			<article class="item">
+				<div class="content">
+					<div class="header">{{ Hypothesis.Title }}</div>
+					<div class="meta">Date added: {{ Hypothesis.DateAdded }}</div>
+					<div class="description">{{ Hypothesis.Summary }}</div>
+					<div class="extra">
+						<div class="ui label">Highly reviewed</div>
+					</div>
+				</div>
+			</article>
+		</a>
+	{% else %}
+		<div class="ui icon message">
+			<i class="space shuttle icon"></i>
+			<div class="content">
+				<div class="header">No entries yet</div>
+				<p>Scientists go!</p>
+			</div>
+		</div>
+	{% endfor %}
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "Bases/Base.html" %}
+
+{% block PreludeContent %}
+{% include "Modules/Flow.html" %}
+
+<div class="ui container" style="margin-top: 1em">
+	<h3 class="ui block header">Problem: {{ Hypothesis.Problem.ProblemDescription }}</h3>
+
+	<div class="ui divider"></div>
+</div>
+{% endblock %}
+
+{% block MainContent %}
+<div class="ui two column stackable grid">
+	<div class="ten wide column">
+		<article>
+			<h1><span style="color: #00b5ad">Hypothesis: </span>{{ Hypothesis.Title }}</h1>
+			<p><strong>DOI: </strong>{{ Hypothesis.DOI }}</p>
+			<p><strong>Date added: </strong>{{ Hypothesis.DateAdded }}</p>
+			<a class="ui button" href="http://dx.doi.org/{{ Hypothesis.DOI }}"><i class="download icon"></i>Download paper</a>
+			
+			<section class="ui segment">
+				<h3>Summary</h3>
+				<div class="ui divider"></div>
+				<p>{{ Hypothesis.Summary }}</p>
+			</section>
+			
+			<section class="ui segment">
+				<h3>Document</h3>
+				<embed src="/uploads/{{ Hypothesis.DocumentName }}.pdf" width="500" height="375" type="application/pdf">
+			</section>
+		</article>
+	</div>
+	
+	<div class="six wide column">
+		<div class="ui one column stackable grid">
+			<div class="column">{% include "Modules/Rating.html" %}</div>
+			<div class="column">{% include "Modules/Reviews.html" %}</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
