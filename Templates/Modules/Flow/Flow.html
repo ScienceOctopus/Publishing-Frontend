@@ -1,0 +1,31 @@
+<aside class="ui six column grid" id="octopus-flow-graph">
+	
+	{% for Stage in Problem.Stages %}
+	
+	{# The two Stages should be the same object so use === for comparison #}
+	{% set StageCurrentlyActive = ActivePublication is defined and ActivePublication.Stage is same as(Stage) %}
+	
+	<div class="column" style="min-width: 30ch">
+		<article class="ui {{ StageCurrentlyActive ? 'raised' }} segment">
+			<h4 class="ui inverted header" style="padding: 1em; border-top-left-radius: 0.28rem; margin-top: -1em; margin-right: -1em; margin-left: -1em; background-color: var(--octopus-theme-accent)">
+				{{ Stage.Name }}
+				<div class="floating ui {{ StageCurrentlyActive ? 'teal' }} label">{{ Stage.Publications|length }}</div>
+			</h4>
+			
+			<div class="ui relaxed divided link items" style="font-size: 0.75rem">
+				{% for Publication in Stage.Publications|filter(Publication => not Publication.IsReview) %}
+					{% include 'Modules/Flow/Item.html' %}
+				{% endfor %}
+				
+				{# Use StageId here because neither .Stage (nor .Problem) is populated in flow graph Publications #}
+				{# Only show reviews for the currently active Publication, by matching on the Stage. The currently active will be the only non-review in the Stage due to the way links work. #}
+				{% for Publication in Stage.Publications|filter(Publication => Publication.IsReview and Publication.StageId is same as(ActivePublication.Stage.Id)) %}
+					{% include 'Modules/Flow/Item.html' %}
+				{% endfor %}
+			</div>
+			
+		</article>
+	</div>
+	{% endfor %}
+
+</aside>

@@ -1,0 +1,50 @@
+{% extends "Bases/Base.html" %}
+
+{% block MainContent %}
+{% include "Modules/Header.html" %}
+
+{% if Problems is empty %}
+
+<main class="ui text container">
+	<div class="ui icon message">
+		<i class="space shuttle icon"></i>
+		<div class="content">
+			<div class="header">No entries yet</div>
+			<p>Scientists go!</p>
+		</div>
+	</div>
+</main>
+
+{% else %}
+
+<main class="ui text container">
+	<div class="ui one statistics">
+		<div class="statistic">
+			<div class="value">{{ Problems|length }}</div>
+			<div class="label">Areas of research</div>
+		</div>
+	</div>
+	
+	<div class="ui segment">
+	<nav class="ui divided relaxed link items">
+		{% for Problem in Problems %}
+		<article class="item">
+			<a href="{{ constant('WebURI::Problem') }}/{{ Problem.Id }}" class="content">
+				<div class="header">{{ Problem.Title }}</div>
+				<button class="ui right floated icon button octopus-theme accent">
+					<i class="ui icon file alternate outline"></i>
+					{{ Problem.PublicationCount }}
+				</button>
+				<div class="description">{{ Problem.Description }}</div>
+				<div class="extra">Last modified: {{ Problem.LastModified }}</div>
+			</a>
+		</article>
+		{% endfor %}
+	</nav>
+	</div>
+</main>
+
+{% endif %}
+
+<div class="ui hidden divider"></div>
+{% endblock %}

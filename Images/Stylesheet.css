@@ -1,0 +1,143 @@
+/* Center landing page header when width falls below threshold.
+Value copied from Semantic UI's 「copmute tarblet only」 */
+@media only screen and (max-width: 767px)
+{
+	#octopus-mobile-centered-header
+	{
+		text-align: center;
+	}
+}
+
+/* Semantic applies a -1em margin to all sides of a grid.
+However on touch-based smooth zoom capable browsers this will cause the grid to flow onto the right of the viewport.
+This then causes an artifact when zooming out.
+Fix by eliminating this margin. */
+.ui.grid
+{
+	margin-right: 0;
+}
+
+#octopus-flow-graph
+{
+	margin-right: -1em; /* Make sure the graph stretches to the edge of the grid, after the grid fix above is applied */
+	overflow-x: auto;
+	overflow-y: hidden;
+	flex-wrap: nowrap;
+	padding-left: 1em;
+}
+
+/* The default navigation bar seems to have a rounded border.
+This leads to little areas where white bleeds through so change it back to none. */
+#octopus-navigation
+{
+	border-radius: 0;
+}
+
+@media only screen and (max-width: 767px)
+{
+	#octopus-navigation .item::before
+	{
+		display: none;
+	}
+
+	#octopus-navigation-container, #octopus-navigation-login-items
+	{
+		flex-wrap: wrap;
+		justify-content: center;
+	}
+
+	#octopus-navigation-container .right
+	{
+		margin-left: 0 !important;
+	}
+}
+
+/* Global variables for the Octopus colour scheme. */
+:root
+{
+	--octopus-theme-accent: #a092ed;
+	--octopus-theme-background: #abbef0;
+
+	--octopus-theme-publication: hsl(270, 68%, 60%);
+	--octopus-theme-publication-highlight: hsl(270, 68%, 85%);
+	--octopus-theme-publication-highlight-transparent: hsla(270, 68%, 85%, 0);
+
+	--octopus-theme-review: hsl(176, 56%, 50%);
+	--octopus-theme-review-highlight: hsl(176, 56%, 85%);
+	--octopus-theme-review-highlight-transparent: hsla(176, 56%, 85%, 0);
+
+	--octopus-theme-explore: #c4e2dd;
+	--octopus-theme-publish: #99a4c7;
+	--octopus-theme-moar: #9085b9;
+	--octopus-theme-questionable: #9873ab;
+}
+
+/* Class-specific overrides to colour according to our scheme.
+Also correct some visual issues after the scheme is applied, like text contrast. */
+
+.inverted.octopus-theme.background, .ui.button.octopus-theme.background
+{
+	background-color: var(--octopus-theme-background) !important;
+}
+
+.ui.segment.octopus-theme.accent
+{
+	border-top: 2px var(--octopus-theme-accent) solid !important;
+}
+
+.inverted.octopus-theme.accent, .ui.button.octopus-theme.accent
+{
+	background-color: var(--octopus-theme-accent) !important;
+}
+
+.ui.button.octopus-theme.explore
+{
+	background-color: var(--octopus-theme-explore) !important;
+}
+
+.ui.button.octopus-theme.publish
+{
+	background-color: var(--octopus-theme-publish) !important;
+}
+
+.ui.button.octopus-theme.moar
+{
+	background-color: var(--octopus-theme-moar) !important;
+}
+
+.ui.button.octopus-theme.questionable
+{
+	background-color: var(--octopus-theme-questionable) !important;
+}
+
+.ui.button.octopus-theme:hover
+{
+	filter: brightness(90%);
+}
+
+.ui.button.octopus-theme:focus
+{
+	filter: brightness(80%);
+}
+
+.ui.button.octopus-theme.publication
+{
+	background-color: var(--octopus-theme-publication);
+}
+
+.ui.inverted.segment.octopus-theme.publication.highlight
+{
+	background-color: var(--octopus-theme-publication-highlight);
+	color: black;
+}
+
+.ui.button.octopus-theme.review
+{
+	background-color: var(--octopus-theme-review);
+}
+
+.ui.inverted.segment.octopus-theme.review.highlight
+{
+	background-color: var(--octopus-theme-review-highlight);
+	color: black;
+}

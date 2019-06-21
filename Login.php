@@ -2,6 +2,7 @@
 session_start();
 
 require_once 'Globals.php';
+require_once 'Models/Users.php';
 require_once 'Environment Interfaces/Session.php';
 
 if (isset($_GET['logout']) && $_GET['logout'])
@@ -15,38 +16,38 @@ if (isset($_GET['logout']) && $_GET['logout'])
 
 $HasRedirect = isset($_GET['redirect']);
 
-if (isset($_GET['login']) && $_GET['login'])
-{
-	Session::AuthoriseViaORCiD(
-		'?' . http_build_query(
-			array(
-				'redirect' => $HasRedirect ? $_GET['redirect'] : null
-			)
-		)
-	);
-	return;
-}
-
 if (isset($_GET['code']))
 {
-	if (!Session::ExchangeORCiDToken($_GET['code']))
-	{
-		SetRefresh(
-			$_SERVER['PHP_SELF'] .
-			'?' .
-			http_build_query(
-				array(
-					'login' => 1,
-					'redirect' => $HasRedirect ? $_GET['redirect'] : null
-				)
-			)
-		);
-		
+	$ExchangeResponse = Session::ExchangeGoblinIdToken($_GET['code']);
+	if (!$ExchangeResponse)
+	{	
 		session_unset();
 		session_destroy();
 		
 		http_response_code(500);
 		return;
+	}
+	
+	$DisplayName = $ExchangeResponse->name;
+	$GoblinId = $ExchangeResponse->orcid;
+	
+	// Make another visit to the Goblin to solicit user details
+	$UserEmail = Session::GetGoblinIdUserDetails($GoblinId)->getElementsByTagName('emails')[0]->getElementsByTagName('email');
+	$Email = ($UserEmail->count() === 0) ? null : $UserEmail[0]->getElementsByTagName('email')[0]->nodeValue;
+	
+	$User = new User($GoblinId, $DisplayName, $Email);
+	try
+	{
+		$UserId = Users::AddOrUpdate($User);
+		$_SESSION['UserId'] = $UserId;
+	}
+	catch (Exception $UpsertError)
+	{
+		session_unset();
+		session_destroy();
+		
+		http_response_code(500);
+		throw $UpsertError;
 	}
 
 	if ($HasRedirect)
@@ -57,4 +58,3 @@ if (isset($_GET['code']))
 }
 
 http_response_code(400);
-?>

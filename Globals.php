@@ -1,17 +1,33 @@
 <?php
-if (!($INIParseResult = parse_ini_file('Configuration.ini')))
-{
-	die;
-}
 
-define('DB_ADDRESS', $INIParseResult['DatabaseAddress']);
-define('DB_USERNAME', $INIParseResult['DatabaseUsername']);
-define('DB_PASSWORD', $INIParseResult['DatabasePassword']);
-define('DB_PLUGINSDATABASENAME', $INIParseResult['PluginDatabaseName']);
+/* header_remove('Cache-Control');
+header_remove('Pragma');
+header_remove('Expires');
+header('Cache-Control: max-age=10'); */
+
+pg_pconnect(getenv('POSTGRESQLCONNSTR_DATABASE'));
 
 // autoloader dir ... autoloadir hon hon hon
 define('COMPOSER_AUTOLOADIR', join(DIRECTORY_SEPARATOR, array('D:\home\site\Composer', 'vendor', 'autoload.php')));
 define('CACHE_DIR', 'D:\home\site\Static Cache');
+
+final class WebURI
+{
+	const Home = '/';
+	const Upload = '/upload';
+	const Search = '/search';
+	const Problem = '/problem';
+	const Publication = '/publication';
+	const Profile = '/profile';
+	const GoblinIdLogin = 'https://orcid.org/oauth/authorize';
+	const GoblinIdLoginReturn = '/login';
+	const GoblinIdExchangeToken = 'https://orcid.org/oauth/token';
+	const Avatar = '/avatar';
+	const Logout = '/login?logout=1';
+	const Explore = '/search';
+	const FAQ = '/faq';
+	const Moar = '/about';
+}
 
 function GetTwigOptions()
 {

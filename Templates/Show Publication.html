@@ -1,0 +1,54 @@
+{% extends "Bases/Base.html" %}
+
+{% block MainContent %}
+{% include "Modules/Header.html" %}
+{% include "Modules/Flow/Graph.html" with { Problem: Publication.Problem } %}
+
+<div class="ui divider"></div>
+
+<main class="ui text container">
+	<article>
+		<h1 class="ui header"><span style="color: #00b5ad">{{ Publication.Stage.SingularName }}: </span>{{ Publication.Title }}
+		<br />
+		{% for Tag in Publication.Tags %}
+		<div class="ui label">{{ Tag.Label }}</div>
+		{% endfor %}
+		<div class="sub header">Date added: {{ Publication.CreatedAt }}</div>
+		</h1>
+		
+		<div class="ui list">
+		{% for Collaborator in Publication.Collaborators %}
+			<address class="ui item">
+				<img class="ui avatar image" src="/images/avatar.jpg" alt="Avatar of ?">
+				<div class="content">
+					<div class="header">{{ Collaborator.User.DisplayName }}</div>
+					<div class="description">{{ Collaborator.Role }}</div>
+				</div>
+			</address>
+		{% endfor %}
+		</div>
+		
+		<section class="ui segment">
+			<h3>Summary</h3>
+			<div class="ui divider"></div>
+			<p>{{ Publication.Summary }}</p>
+		</section>
+		
+		<figure class="ui segment">
+			<embed src="https://octopuspublishing.blob.core.windows.net/publications/file-3a6d095b-55c7-4e2c-8cd0-eda25af1b853.pdf" style="width: 100%; min-height: 30em" type="application/pdf">
+			<a class="ui button" href="http://dx.doi.org/{{ Hypothesis.DOI }}"><i class="download icon"></i>Download paper</a>
+		</figure>
+		
+		<section class="ui horizontal segments">
+			<section class="ui segment">
+				<h3>Funding statement</h3>
+				<p>{{ Publication.FundingStatement }}</p>
+			</section>
+			<section class="ui segment">
+				<h3>Conflicts of interest</h3>
+				<p>{{ Publication.InterestingConflicts }}</p>
+			</section>
+		</section>
+	</article>
+</main>
+{% endblock %}

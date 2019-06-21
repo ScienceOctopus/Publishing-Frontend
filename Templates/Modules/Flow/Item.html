@@ -1,0 +1,13 @@
+<a href="{{ constant('WebURI::Publication') }}/{{ Publication.Id }}" class="item">
+	{% set ReviewSpecificStyle = Publication.IsReview ? 'margin-left: 1em; padding-right: 1em' %}
+	<article class="content" style="width: 100%; {{ ReviewSpecificStyle }}">
+		<h5 class="header" style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden; width: 100%">{{ Publication.Title }}</h5>
+		<div class="meta">{{ Publication.CreatedAt }}</div>
+		<div class="description" style="max-height: 3rem; overflow-y: hidden;">{{ Publication.Summary|slice(0,150) }}</div>
+		
+		{% if StageCurrentlyActive and not Publication.IsReview %}
+			{% set ReviewCount = Stage.Publications|filter(Publication => Publication.IsReview)|length %}
+			<div class="extra"><i class="ui star icon"></i>{{ ReviewCount }} {{ (ReviewCount == 1) ? 'review' : 'reviews' }}</div>
+		{% endif %}
+	</article>
+</a>

@@ -1,53 +1,35 @@
-<header class="ui teal inverted menu" style="border-radius: 0">
-	<div class="ui container">
-		<a class="header item" href="/">
-			<img
-				class="logo"
-				src="/Images/Octopus.png"
-				alt="Octopus Logo"
-				style="margin-right: 1.5em"
-			/>
-
-			Octopus
+<nav
+	class="ui inverted octopus-theme accent menu"
+	id="octopus-navigation"
+>
+	<div class="ui container" id="octopus-navigation-container">
+		<a href="{{ constant('WebURI::Home') }}" class="header item">
+			{% include 'Modules/Octopus Logo.html' with {'style': 'margin-right: 1.5em', 'class': 'logo'} %}
+			<p>Octopus <span style="font-weight: lighter; text-transform: uppercase; font-size: 0.8em">Lite</span></p>
 		</a>
+		{% if LoginDetails.LoggedIn %}
+			<a href="{{ constant('WebURI::Upload') }}" class="{{ ActiveItems[0] }} item">
+				<i class="ui pencil alternate icon"></i>
+				Publish your work
+			</a>
+		{% endif %}
+		
+		{% include 'Modules/Global Search.html' with {'placeholder': 'Search science'} %}
 		
 		{% if LoginDetails.LoggedIn %}
-		{% if Problem is not empty %}
-			<a class="item" href="/hypotheses/add/{{ Problem.ProblemId }}">
-				<i class="ui pencil alternate icon"></i>
-				Add a new hypothesis
-			</a>
-		{% elseif Hypothesis is not empty %}
-			<a class="item" href="/hypotheses/add/{{ Hypothesis.Problem.ProblemId }}">
-				<i class="ui pencil alternate icon"></i>
-				Add a new hypothesis
-			</a>
-		{% endif %}
-		{% endif %}
-	
-		<!--<div class="right item">
-			<form action="/search" method="post" class="ui action input">
-				<input required placeholder="Search for publications" size="25" type="text" name="Query" />
-	
-				<select name="Method" class="ui compact selection dropdown">
-					<option value="PublicationName">Publication</option>
-				</select>
-
-				<input type="submit" name="Search" value="Search" class="ui button" />
-			</form>
-		</div>-->
-	
-		<div class="right item">
-			{% if LoginDetails.LoggedIn %}
-				<img src="{{ LoginDetails.User.avatar_url }}" class="ui avatar image" alt="Avatar of {{ LoginDetails.User.name }}" />
-				<strong>{{ LoginDetails.User.name }}</strong>
-				<a style="margin-left: 1em" class="ui button" href="/login?logout=1">Logout</a>
-			{% else %}
-				<a href="/login?{{ LoginDetails.LoginRedirectURL }}">
-					<img src="https://www.gravatar.com/avatar/?d=mm" class="ui avatar image" alt="Generic avatar" title="Log in" />
+			<div class="right menu" id="octopus-navigation-login-items">
+				<a href="{{ constant('WebURI::Profile') }}" class="{{ ActiveItems[1] }} item">
+					<img
+						src="{{ constant('WebURI::Avatar') }}"
+						class="ui right spaced avatar image"
+						alt="Avatar of {{ LoginDetails.User.DisplayName }}"
+					/>
+					<strong>{{ LoginDetails.User.DisplayName }}</strong>
 				</a>
-				<span>Log in via ORCiD</span>
-			{% endif %}
-		</div>
+				{% include 'Modules/Logout Invitation.html' %}
+			</div>
+		{% else %}
+			{% include 'Modules/GoblinID Login Invitation.html' %}
+		{% endif %}
 	</div>
-</header>
+</nav>

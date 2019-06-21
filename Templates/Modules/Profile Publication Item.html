@@ -1,0 +1,13 @@
+<a href="{{ constant('WebURI::Publication') }}/{{ Publication.Id }}" class="ui link card">
+	<div class="content">
+		<h5 class="header" style="margin-bottom: 0">{{ Publication.Title }}</h5>
+		<div class="meta">{{ Publication.CreatedAt }}</div>
+		<div class="description">{{ Publication.Summary|slice(0, 100) }}</div>
+	</div>
+	
+	{% if Publication.IsReview %}
+	<div class="extra content">
+		<i class="ui star icon"></i>This publication is a review
+	</div>
+	{% endif %}
+</a>

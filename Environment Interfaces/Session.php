@@ -18,47 +18,120 @@ final class NotLoggedInAccountDetails
 {
 	public function __construct()
 	{
-		$this->LoginRedirectURL = http_build_query(array('login' => 1, 'redirect' => $_SERVER['REQUEST_URI']));
+		$this->OAuthFlowStartURI = Session::GetGoblinIdAuthorisationURI();
 	}
 
 	public $LoggedIn = false;
-	public $LoginRedirectURL;
+	public $OAuthFlowStartURI;
 }
 
 final class Session
 {
-	static function GetLoggedInDetails(&$Details = null)
+	static function GetLoggedInDetails()
 	{
 		if (!isset($_SESSION['OAuthToken']))
 		{
-			$Details = new NotLoggedInAccountDetails();
-			return false;
+			return new NotLoggedInAccountDetails();
 		}
 
-		if (!isset($_SESSION['UserID']))
+		static $User;
+		if ($User === null)
 		{
-			session_unset();
-			session_destroy();
+			$User = Users::GetById($_SESSION['UserId']);
+		}
+		return new LoggedInAccountDetails($User);
+	}
 
-			$Details = new NotLoggedInAccountDetails();
+	static function GetGoblinIdAuthorisationURI()
+	{
+		$_SESSION['OAuthState'] = hash('sha512', session_id());
+
+		return WebURI::GoblinIdLogin .
+			'?' .
+			http_build_query(
+				array(
+					'state' => $_SESSION['OAuthState'],
+					'client_id' => getenv('GOBLINID_OAUTH_CLIENT_ID'),
+					'response_type' => 'code',
+					'scope' => '/authenticate',
+					'redirect_uri' => 'https://' . $_SERVER['SERVER_NAME'] . WebURI::GoblinIdLoginReturn . '?' . http_build_query(
+						array(
+							'redirect' => $_SERVER['REQUEST_URI']
+						)
+					)
+				)
+			);
+	}
+
+	static function ExchangeGoblinIdToken($AuthorisationCode)
+	{
+		if (
+			!isset($_GET['state']) ||
+			!isset($_SESSION['OAuthState']) ||
+			($_GET['state'] != $_SESSION['OAuthState'])
+		)
+		{
 			return false;
 		}
 
-		$Details = new LoggedInAccountDetails(unserialize(Cache::GetCacheEntry(CacheType::Users, $_SESSION['UserID'])));
-		return true;
-	}
+		$CURLInstance = curl_init(WebURI::GoblinIdExchangeToken);
+		$Headers[] = 'Accept: application/json';
+		$Headers[] = 'User-Agent: Octopus (PHP backend)';
 
-	static function AuthoriseViaORCiD($AdditionalParameters)
-	{
-		SetRedirect('/login?code=1337&redirect=/');
-	}
+		if (isset($_SESSION['OAuthToken']))
+		{
+			$Headers[] = 'Authorization: Bearer ' . $_SESSION['OAuthToken'];
+		}
 
-	static function ExchangeORCiDToken($AuthorisationCode)
+		curl_setopt($CURLInstance, CURLOPT_HTTPHEADER, $Headers);
+		curl_setopt($CURLInstance, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($CURLInstance, CURLOPT_FOLLOWLOCATION, true);
+		curl_setopt(
+			$CURLInstance,
+			CURLOPT_POSTFIELDS,
+			http_build_query(
+				array(
+					'client_id' => getenv('GOBLINID_OAUTH_CLIENT_ID'),
+					'client_secret' => getenv('GOBLINID_OAUTH_CLIENT_SECRET'),
+					'grant_type' => 'authorization_code',
+					'state' => $_SESSION['OAuthState'],
+					'code' => $AuthorisationCode
+				)
+			)
+		);
+
+		$Response = json_decode(curl_exec($CURLInstance));
+		if (isset($Response->access_token))
+		{
+			$_SESSION['OAuthToken'] = $Response->access_token;
+			return $Response;
+		}
+		
+		return false;
+	}
+	
+	static function GetGoblinIdUserDetails($GoblinId)
 	{
-		$_SESSION['OAuthToken'] = 1;
-		$_SESSION['UserID'] = 1;
-		Cache::UpdateCacheEntry(CacheType::Users, 1, serialize(array('avatar_url' => 'https://www.gravatar.com/avatar/cc9c4926a7d769cc4c22d1e0993bbaed', 'name' => 'Stop squidding around')));
-		return true;
+		$GoblinIdEmailEndpoint = "https://pub.orcid.org/v2.1/$GoblinId/email";
+		
+		$CURLInstance = curl_init($GoblinIdEmailEndpoint);
+		$Headers = array(
+			'Accept: application/vnd.orcid+xml',
+			'User-Agent: Octopus (PHP backend)',
+			'Authorization: Bearer ' . $_SESSION['OAuthToken']
+		);
+
+		curl_setopt($CURLInstance, CURLOPT_HTTPHEADER, $Headers);
+		curl_setopt($CURLInstance, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($CURLInstance, CURLOPT_FOLLOWLOCATION, true);
+
+		$XML = new DOMDocument();
+		$XML->loadXML(curl_exec($CURLInstance));
+		if (!$XML->schemaValidate('Environment Interfaces' . DIRECTORY_SEPARATOR . 'GoblinID Schemas' . DIRECTORY_SEPARATOR . 'record_3.0' . DIRECTORY_SEPARATOR . 'email-3.0.xsd'))
+		{
+			throw new Exception(libxml_get_errors());
+		}
+		return $XML;
 	}
 }
 ?>

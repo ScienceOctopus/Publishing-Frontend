@@ -1,0 +1,61 @@
+{% extends "Bases/Base.html" %}
+
+{% block MainContent %}
+{% include "Modules/Header.html" with { ActiveItems: ['', 'active'] } %}
+
+<main class="ui text container">
+	<h2 class="ui center aligned icon header">
+		<i class="circular user icon"></i>
+		Your publishing profile
+		<a class="sub header" href="https://orcid.org/{{ LoginDetails.User.GoblinId }}">
+			{{ LoginDetails.User.DisplayName }}
+			<img class="ui avatar image" style="width: 1em; margin-right: 0;" src="/images/Open Researcher and Contributor Identifier Badge.svg" alt="Open Researcher and Contributor Identifier Badge">
+			https://orcid.org/{{ LoginDetails.User.GoblinId }}
+		</a>
+	</h2>
+
+	<div class="ui hidden divider"></div>
+
+	<h3 class="ui dividing header">
+		<i class="exclamation icon"></i>
+		<div class="content">
+			Publications requiring your sign-off
+			<div class="sub header">You have been requested to be a collaborator on these publications</div>
+		</div>
+	</h3>
+	
+	<article class="ui three stackable cards" style="font-size: 0.75em">
+	{% for Publication in RequestedSignoffs %}
+		{% include 'Modules/Profile Publication Item.html' %}
+	{% endfor %}
+	</article>
+
+	<h3 class="ui dividing header">
+		<i class="file alternate outline icon"></i>
+		<div class="content">
+			Your finalised publications
+			<div class="sub header">Publically viewable, completed publications submitted to Octopus</div>
+		</div>
+	</h3>
+	
+	<article class="ui three stackable cards" style="font-size: 0.75em">
+	{% for Publication in Publications|filter(Publication => not Publication.IsDraft) %}
+		{% include 'Modules/Profile Publication Item.html' %}
+	{% endfor %}
+	</article>
+
+	<h3 class="ui dividing header">
+		<i class="paragraph icon"></i>
+		<div class="content">
+			Your draft publications
+			<div class="sub header">Draft publications submitted to Octopus, only viewable by collaborators</div>
+		</div>
+	</h3>
+	
+	<article class="ui three stackable cards" style="font-size: 0.75em">
+	{% for Publication in Publications|filter(Publication => Publication.IsDraft) %}
+		{% include 'Modules/Profile Publication Item.html' %}
+	{% endfor %}
+	</article>
+</main>
+{% endblock %}

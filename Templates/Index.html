@@ -1,31 +1,109 @@
 {% extends "Bases/Base.html" %}
 
+{% set styles = {
+	'main': '
+		padding: 2em 0;
+		min-height: 94vh
+	',
+	'heading': '
+		font-size: 5em;
+		font-weight: normal;
+		line-height: 0.9em
+	',
+	'subtitle': '
+		color: #fff;
+		font-size: 2em;
+		margin-top: 0
+	',
+	'explanation': '
+		color: white;
+		line-height: 1.5em;
+		font-size: 1.4em
+	',
+	'explore': 'width: 30ch',
+	'publish': 'width: 32ch',
+	'more': 'width: 26ch',
+	'faq': 'width: 20ch',
+	'heroImage': 'min-width: 45vw',
+} %}
+
 {% block MainContent %}
-	<div style="border-bottom:none" class="ui teal vertical center aligned segment">
-		<div class="ui text container">
-			<h1 class="ui header">
-				Welcome to Octopus.
-				<div class="sub header">Where would <em>you</em> like to go today?</div>
-			</h1>
-			<i class="arrow down icon"></i>
+{% include "Modules/Header.html" %}
+
+<main
+	class="ui middle aligned two column centered stackable inverted octopus-theme background grid"
+	style="{{ styles.main }}"
+>
+	<div class="seven wide column">
+		<h1
+			id="octopus-mobile-centered-header"
+			class="ui inverted header"
+			style="{{ styles.heading }}"
+		>
+			Built for scientists
+		</h1>
+		<h2 id="octopus-mobile-centered-header" style="{{ styles.subtitle }}">
+			Octopus is the new way to publish your scientific ideas, findings
+			and research.
+		</h2>
+		<div style="{{ styles.explanation }}">
+			Designed to replace journals and papers, Octopus is free to use
+			and gets your work out there much more quickly, to a wider
+			audience and ensures you get maximum credit for the work you do,
+			whether that’s coming up with hypotheses, designing protocols,
+			collecting data, doing analyses or writing reviews.
 		</div>
-	</div>
-	
-	{% for Problem in Problems %}
-		<div class="ui text container">
-			<div class="ui segment">
-				<a class="ui divided link items" href="/hypotheses/all/{{ Problem.ProblemId }}">
-					<article class="item">
-						<div class="content">
-							<div class="header">{{ Problem.ProblemDescription }}</div>
-							<div class="description">What does this mean?</div>
-							<div class="extra">
-								<div class="ui label">Highly relevant</div>
-							</div>
-						</div>
-					</article>
+		<div class="ui hidden divider"></div>
+		<div class="ui grid">
+			<div class="column" style="{{ styles.explore }}">
+				<a
+					href="{{ constant('WebURI::Explore') }}"
+					class="ui octopus-theme explore large right labeled icon button"
+				>
+					<i class="search icon"></i>
+					Explore Science
+				</a>
+			</div>
+			<div class="column" style="{{ styles.publish }}">
+				<a
+					class="ui octopus-theme publish large right labeled icon button"
+					href="{{ constant('WebURI::Upload') }}"
+				>
+					<i class="ui pencil alternate icon"></i>
+					Publish your work
+				</a>
+			</div>
+			<div class="column" style="{{ styles.more }}">
+				<a
+					href="{{ constant('WebURI::Moar') }}"
+					class="ui octopus-theme moar large right labeled icon button"
+				>
+					<i class="exclamation icon"></i>
+					Learn more
+				</a>
+			</div>
+			<div class="column" style="{{ styles.faq }}">
+				<a
+					href="{{ constant('WebURI::FAQ') }}"
+					class="ui octopus-theme questionable large right labeled icon button"
+				>
+					<i class="question icon"></i>
+					FAQ
 				</a>
 			</div>
 		</div>
-	{% endfor %}
+	</div>
+	<div class="seven wide column computer tablet only">
+		<a href="{{ constant('WebURI::Explore') }}">
+			<img
+				src="images/graph.png"
+				alt="Science Graph Preview"
+				class="ui fluid image"
+				style="{{ styles.heroImage }}"
+			/>
+		</a>
+	</div>
+</main>
+
+{% include "Modules/Footer.html" %}
 {% endblock %}
